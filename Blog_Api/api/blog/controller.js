@@ -95,6 +95,17 @@ exports.createBlog = async (req, res) => {
 //Updating an existing blog by id
 exports.updateBlog = async (req, res) => {
   try {
+    // Get the blog with the specified id using the Blog module
+    const getBlog = await Blog.getBlog(req.params.id);
+
+    // If the blog doesn't exist, return a failure response
+    if (!getBlog) {
+      return res.status(404).json({
+        status: "FAIL",
+        message: "There is no data with the specified id",
+      });
+    }
+
     // Extract the fields to update from the request body
     const { title, tag, content } = req.body;
 
@@ -124,6 +135,16 @@ exports.updateBlog = async (req, res) => {
 // Deleting a blog
 exports.deleteBlog = async (req, res) => {
   try {
+    // Get the blog with the specified id using the Blog module
+    const blog = await Blog.getBlog(req.params.id);
+
+    // If the blog doesn't exist, return a failure response
+    if (!blog) {
+      return res.status(404).json({
+        status: "FAIL",
+        message: "There is no data with the specified id",
+      });
+    }
     // Call the deleteBlog function from the Blog model with the ID passed in the request parameters
     await Blog.deleteBlog(req.params.id);
 
