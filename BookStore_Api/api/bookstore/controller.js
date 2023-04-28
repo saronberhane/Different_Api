@@ -4,7 +4,7 @@ const BookStore = require("./dal");
 exports.createBook = async (req, res) => {
   try {
     const {
-      bookTitle,
+      booksTitle,
       booksAuthor,
       booksDescription,
       booksPrice,
@@ -13,7 +13,7 @@ exports.createBook = async (req, res) => {
     } = req.body;
 
     if (
-      !bookTitle ||
+      !booksTitle ||
       !booksAuthor ||
       !booksDescription ||
       !booksPrice ||
@@ -28,7 +28,7 @@ exports.createBook = async (req, res) => {
 
     //creating a new book using the book module
     const newBook = await BookStore.createBook({
-      bookTitle,
+      booksTitle,
       booksAuthor,
       booksDescription,
       booksPrice,
@@ -100,8 +100,17 @@ exports.getAllBooks = async (req, res) => {
 //update book
 exports.updateBook = async (req, res) => {
   try {
+    const getBook = await BookStore.getBook(req.params.id);
+
+    if (!getBook) {
+      return res.status(404).json({
+        status: "FAIL",
+        message: "There is no book with this id",
+      });
+    }
+
     const {
-      bookTitle,
+      booksTitle,
       booksAuthor,
       booksDescription,
       booksPrice,
@@ -111,7 +120,7 @@ exports.updateBook = async (req, res) => {
 
     const book = await BookStore.updateBook({
       data: {
-        bookTitle,
+        booksTitle,
         booksAuthor,
         booksDescription,
         booksPrice,
@@ -139,7 +148,15 @@ exports.updateBook = async (req, res) => {
 //delete a book
 exports.deleteBook = async (req, res) => {
   try {
-    await BookStore.deleteBook(res.params.id);
+    const book = await BookStore.getBook(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({
+        status: "FAIL",
+        message: "There is no book with this id",
+      });
+    }
+    await BookStore.deleteBook(req.params.id);
 
     res.status(200).json({
       status: "SUCCESS",
@@ -156,7 +173,7 @@ exports.deleteBook = async (req, res) => {
 //delete all books
 exports.deleteAllBooks = async (req, res) => {
   try {
-    const books = await BookStore.deleteMany();
+    const books = await BookStore.deleteAllBooks();
     res.status(200).json({
       status: "SUCCESS",
       message: "The books are deleted successfully",

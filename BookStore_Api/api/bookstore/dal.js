@@ -1,9 +1,8 @@
-const { model } = require("mongoose");
 const BookStoreModel = require("./model");
 
 class BookStore {
   //create a book
-  static async createbook() {
+  static async createBook(data) {
     try {
       const newBook = BookStoreModel.create({
         booksTitle: data.booksTitle,
@@ -70,10 +69,12 @@ class BookStore {
   }
 
   // delet all books
-  static async deletAllBooks() {
+  static async deleteAllBooks() {
     try {
       await BookStoreModel.deleteMany({});
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
