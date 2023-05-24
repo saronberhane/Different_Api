@@ -17,13 +17,10 @@ class HrSystem {
   }
 
   //get by departmentName and employeeName
-  static async getByEmployeeOrDepartmentName(departmentName, employeeName) {
+  static async getByEmployeeOrDepartmentName({departmentName, employeeName}) {
     try {
       const hrSystem = await HrSystemModel.find({
-        $or: [
-            employeeName ? { employeeName } : {},
-            departmentName ? { departmentName } : {},
-          ],
+        $or: [{ employeeName }, { departmentName }],
       });
       return hrSystem;
     } catch (error) {

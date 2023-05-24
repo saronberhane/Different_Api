@@ -47,16 +47,15 @@ exports.createHrSystem = async (req, res) => {
       message: error.message,
     });
   }
-};
-
-
+}
 
 //get hr information by department or employee name
 exports.getByEmployeeOrDepartmentName = async (req, res) => {
   try {
-    const hrSystem = await HrSystem.getByEmployeeOrDepartmentName(
-      req.params.departmentName || req.params.employeeName
-    );
+    const hrSystem = await HrSystem.getByEmployeeOrDepartmentName({
+      departmentName: req.query.departmentName,
+      employeeName: req.query.employeeName,
+    });
     if (hrSystem.length === 0) {
       return res.status(404).json({
         status: "FAIL",
@@ -78,7 +77,6 @@ exports.getByEmployeeOrDepartmentName = async (req, res) => {
     });
   }
 };
-
 
 //get all hr information
 exports.getAllHrSystem = async (req, res) => {
@@ -106,7 +104,7 @@ exports.updateHrSystem = async (req, res) => {
     if (!hrSystemID) {
       return res.status(404).json({
         status: "FAIL",
-        message:"There is no information with this ID",
+        message: "There is no information with this ID",
       });
     }
 
